@@ -1,13 +1,7 @@
-import Navbar from "./components/layout/Navbar";
-import Hero from "./components/layout/Hero";
+import Upload from "./pages/Upload";
 
 function App() {
-  return (
-    <div className="min-h-screen bg-slate-950">
-      <Navbar />
-      <Hero />
-    </div>
-  );
+  return <Upload />;
 }
 
 export default App;
