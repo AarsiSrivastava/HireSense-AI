@@ -1,20 +1,22 @@
-import { useState } from "react";
+interface JDInputProps {
 
-function JDInput() {
-  const [jobDescription, setJobDescription] = useState("");
+  value: string;
+  onChange: (value: string) => void;
+}
 
+function JDInput({ value, onChange }: JDInputProps) {
   return (
-    <div className="w-full max-w-2xl mt-8">
-      <label className="block text-lg font-semibold mb-2">
-        Job Description
+    <div className="w-full max-w-2xl">
+      <label className="block text-2xl font-semibold mb-4">
+        Job Description(Optional)
       </label>
 
       <textarea
-        rows={8}
-        placeholder="Paste the job description here..."
-        value={jobDescription}
-        onChange={(e) => setJobDescription(e.target.value)}
-        className="w-full rounded-xl border border-gray-300 p-4 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={10}
+        placeholder="Paste the job description here (optional). Add one to receive an ATS match score."
+        className="w-full rounded-xl border p-4 outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>
   );
