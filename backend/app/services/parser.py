@@ -150,6 +150,106 @@ def extract_experience(text):
 
     return experience
 
+# -----------------------------------
+# Extract Projects
+# -----------------------------------
+
+def extract_projects(text):
+
+    projects = []
+
+    keywords = [
+        "project",
+        "developed",
+        "built",
+        "created",
+        "designed"
+    ]
+
+    for line in text.split("\n"):
+
+        line = line.strip()
+
+        for keyword in keywords:
+            if keyword in line.lower():
+                if line not in projects:
+                    projects.append(line)
+
+    return projects
+
+
+# -----------------------------------
+# Extract Certifications
+# -----------------------------------
+
+def extract_certifications(text):
+
+    certifications = []
+
+    keywords = [
+        "certificate",
+        "certification",
+        "certified",
+        "nptel",
+        "coursera",
+        "udemy",
+        "aws",
+        "google",
+        "ibm",
+        "microsoft"
+    ]
+
+    for line in text.split("\n"):
+
+        line = line.strip()
+
+        for keyword in keywords:
+            if keyword in line.lower():
+                if line not in certifications:
+                    certifications.append(line)
+
+    return certifications
+
+
+# -----------------------------------
+# Extract Links
+# -----------------------------------
+
+def extract_links(text):
+
+    links = re.findall(
+        r"https?://[^\s]+",
+        text
+    )
+
+    return links
+
+
+# -----------------------------------
+# Extract Languages
+# -----------------------------------
+
+def extract_languages(text):
+
+    language_db = [
+        "english",
+        "hindi",
+        "french",
+        "german",
+        "spanish",
+        "japanese",
+        "chinese"
+    ]
+
+    found = []
+
+    text = text.lower()
+
+    for language in language_db:
+        if language in text:
+            found.append(language.title())
+
+    return found
 
 # -----------------------------------
 # Main Function
@@ -165,7 +265,11 @@ def parse_resume(pdf_path):
         "phone": extract_phone(text),
         "skills": extract_skills(text),
         "education": extract_education(text),
-        "experience": extract_experience(text)
+        "experience": extract_experience(text),
+        "projects": extract_projects(text),
+        "certifications": extract_certifications(text),
+        "links": extract_links(text),
+        "languages": extract_languages(text)
     }
 
     return data
