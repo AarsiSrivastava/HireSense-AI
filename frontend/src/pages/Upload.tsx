@@ -17,6 +17,8 @@ import api from "../api/resumeApi";
 import SkillsChart from "../components/result/SkillsChart";
 import ATSProgressBar from "../components/result/ATSProgressBar";
 import SummaryCard from "../components/result/SummaryCard";
+import RecruiterVerdict from "../components/result/RecruiterVerdict";
+import PrioritySuggestion from "../components/result/PrioritySuggestion";
 function Upload() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -229,11 +231,9 @@ function Upload() {
 
                 {/* Recruiter Recommendation */}
 
-                <ResultCard title="Recruiter Recommendation">
-                  <RecommendationCard
-                    recommendation={resumeData.recommendation}
-                  />
-                </ResultCard>
+                <RecruiterVerdict
+  recommendation={resumeData.recommendation}
+/>
 
                 {/* Skills */}
 
@@ -279,14 +279,16 @@ function Upload() {
 
                 {/* AI Suggestions */}
 
-                <ResultCard title="AI Suggestions">
-  <SuggestionCard
+                <ResultCard title="AI Suggestions Priority">
+
+  <PrioritySuggestion
     suggestions={
       resumeData.suggestions?.length
         ? resumeData.suggestions
         : suggestions
     }
   />
+
 </ResultCard>
 
                 {/* Strengths + Weaknesses */}
