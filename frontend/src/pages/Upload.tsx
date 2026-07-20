@@ -3,7 +3,7 @@ import Navbar from "../components/layout/Navbar";
 import UploadBox from "../components/ui/UploadBox";
 import JDInput from "../components/ui/JDInput";
 import AnalyzeButton from "../components/ui/AnalyzeButton";
-
+import SuggestionCard from "../components/SuggestionCard";
 import ResultCard from "../components/result/ResultCard";
 import SkillBadge from "../components/result/SkillBadge";
 import ATSScore from "../components/result/ATSScore";
@@ -12,9 +12,11 @@ import RecommendationCard from "../components/result/RecommendationCard";
 import StrengthCard from "../components/result/StrengthCard";
 import WeaknessCard from "../components/result/WeaknessCard";
 import SectionAnalysis from "../components/result/SectionAnalysis";
-
+import ResumeStrength from "../components/result/ResumeStrength";
 import api from "../api/resumeApi";
-
+import SkillsChart from "../components/result/SkillsChart";
+import ATSProgressBar from "../components/result/ATSProgressBar";
+import SummaryCard from "../components/result/SummaryCard";
 function Upload() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -48,7 +50,14 @@ function Upload() {
 
     setLoading(false);
   };
-
+  const suggestions = [
+  "Add Docker to your Skills section",
+  "Improve your Professional Summary",
+  "Include measurable achievements",
+  "Mention REST API experience",
+  "Reduce resume length to one page",
+];
+   
   return (
     <>
       <Navbar />
@@ -100,28 +109,57 @@ function Upload() {
               </div>
 
             </ResultCard>
+            <div className="grid md:grid-cols-4 gap-5">
+
+  <SummaryCard
+    title="ATS Score"
+    value={`${resumeData.ats_score}%`}
+    color="bg-blue-600"
+  />
+
+  <SummaryCard
+    title="Matched Skills"
+    value={resumeData.matched_skills?.length || 0}
+    color="bg-green-600"
+  />
+
+  <SummaryCard
+    title="Missing Skills"
+    value={resumeData.missing_skills?.length || 0}
+    color="bg-red-500"
+  />
+
+  <SummaryCard
+    title="Interview Chance"
+    value={`${resumeData.interview_chance}%`}
+    color="bg-purple-600"
+  />
+
+</div>
 
             {resumeData.analysis_type === "resume" ? (
 
               <>
 
                 <ResultCard title="Resume Quality Score">
-                  <ATSScore score={resumeData.resume_score} />
-                </ResultCard>
+
+  <ATSScore score={resumeData.resume_score} />
+
+  <div className="mt-6">
+    <ResumeStrength score={resumeData.resume_score} />
+  </div>
+
+</ResultCard>
 
                 <ResultCard title="Suggestions">
-
-                  <ul className="list-disc ml-6">
-
-                    {resumeData.suggestions?.map(
-                      (item: string, index: number) => (
-                        <li key={index}>{item}</li>
-                      )
-                    )}
-
-                  </ul>
-
-                </ResultCard>
+  <SuggestionCard
+    suggestions={
+      resumeData.suggestions?.length
+        ? resumeData.suggestions
+        : suggestions
+    }
+  />
+</ResultCard>
 
                 <div className="grid md:grid-cols-2 gap-6">
 
@@ -169,8 +207,17 @@ function Upload() {
                 <div className="grid md:grid-cols-2 gap-6">
 
                   <ResultCard title="ATS Score">
-                    <ATSScore score={resumeData.ats_score} />
-                  </ResultCard>
+
+  <ATSScore score={resumeData.ats_score} />
+
+  <div className="mt-6">
+    <ResumeStrength score={resumeData.ats_score} />
+  </div>
+
+</ResultCard>
+<ResultCard title="ATS Compatibility">
+  <ATSProgressBar score={resumeData.ats_score} />
+</ResultCard>
 
                   <ResultCard title="Interview Chance">
                     <InterviewChance
@@ -219,31 +266,28 @@ function Upload() {
                       )}
                     </div>
                   </ResultCard>
+                  <ResultCard title="Skills Distribution">
+
+  <SkillsChart
+    matched={resumeData.matched_skills?.length || 0}
+    missing={resumeData.missing_skills?.length || 0}
+  />
+
+</ResultCard>
 
                 </div>
 
                 {/* AI Suggestions */}
 
                 <ResultCard title="AI Suggestions">
-
-                  <div className="space-y-3">
-
-                    {resumeData.suggestions?.map(
-                      (item: string, index: number) => (
-
-                        <div
-                          key={index}
-                          className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded"
-                        >
-                          💡 {item}
-                        </div>
-
-                      )
-                    )}
-
-                  </div>
-
-                </ResultCard>
+  <SuggestionCard
+    suggestions={
+      resumeData.suggestions?.length
+        ? resumeData.suggestions
+        : suggestions
+    }
+  />
+</ResultCard>
 
                 {/* Strengths + Weaknesses */}
 
@@ -274,7 +318,14 @@ function Upload() {
               </>
             )}
 
-            <div className="flex justify-center pt-6">
+                        <div className="flex justify-center gap-4 pt-6">
+
+              <button
+                onClick={() => window.print()}
+                className="px-8 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+              >
+                Download Report
+              </button>
 
               <button
                 onClick={() => setResumeData(null)}

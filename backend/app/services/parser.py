@@ -1,4 +1,5 @@
-import pdfplumber
+
+import fitz
 import re
 import spacy
 
@@ -26,12 +27,12 @@ SKILLS_DB = [
 def extract_text(pdf_path):
     text = ""
 
-    with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages:
-            page_text = page.extract_text()
+    pdf = fitz.open(pdf_path)
 
-            if page_text:
-                text += page_text + "\n"
+    for page in pdf:
+        text += page.get_text()
+
+    pdf.close()
 
     return text
 
