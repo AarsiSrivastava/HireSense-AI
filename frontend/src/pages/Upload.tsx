@@ -19,10 +19,32 @@ import ATSProgressBar from "../components/result/ATSProgressBar";
 import SummaryCard from "../components/result/SummaryCard";
 import RecruiterVerdict from "../components/result/RecruiterVerdict";
 import PrioritySuggestion from "../components/result/PrioritySuggestion";
+
+interface ResumeData {
+  analysis_type: string;
+  name: string;
+  email: string;
+  phone: string;
+
+  ats_score: number;
+  resume_score: number;
+  interview_chance: number;
+
+  recommendation: string;
+
+  matched_skills: string[];
+  missing_skills: string[];
+  suggestions: string[];
+  strengths: string[];
+  weaknesses: string[];
+
+  section_analysis: Record<string, string>;
+}
+
 function Upload() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [resumeData, setResumeData] = useState<any>(null);
+  const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const [jobDescription, setJobDescription] = useState("");
 
   const analyzeResume = async () => {
@@ -40,15 +62,22 @@ function Upload() {
     try {
       const response = await api.post("/upload", formData);
       setResumeData(response.data);
-    } catch (error: any) {
-      console.error(error);
+    } 
+    catch (error: unknown) {
+  console.error(error);
 
-      if (error.response) {
-        console.log(error.response.data);
-      }
+  if (
+    error &&
+    typeof error === "object" &&
+    "response" in error
+  ) {
+    console.error(
+      (error as { response: { data: unknown } }).response.data
+    );
+  }
 
-      alert("Upload failed.");
-    }
+  alert("Upload failed.");
+}
 
     setLoading(false);
   };
