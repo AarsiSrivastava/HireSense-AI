@@ -1,4 +1,7 @@
 from typing import Optional
+from app.dependencies.auth import get_current_user
+from app.models.user import User
+from fastapi import Depends
 from fastapi import APIRouter, UploadFile, File, Form
 from app.services.parser import parse_resume
 import shutil
@@ -10,10 +13,11 @@ UPLOAD_DIR = "app/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-@router.post("/upload")
-async def upload_resume(
-    file: UploadFile = File(...),
-    job_description: Optional[str] = Form(None)
+@router.post("/analyze")
+async def analyze_resume(
+    resume: UploadFile = File(...),
+    job_description: str = Form(...),
+    current_user: User = Depends(get_current_user),
 ):
     # Save uploaded file
     file_path = os.path.join(UPLOAD_DIR, file.filename)
