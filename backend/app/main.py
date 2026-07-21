@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes.resume import router
+
+from app.routes.resume import router as resume_router
+from app.routes import auth
 
 app = FastAPI(
     title="HireSense AI API",
@@ -21,7 +23,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router)
+# Register Routes
+app.include_router(resume_router)
+app.include_router(auth.router)
 
 
 @app.get("/")
