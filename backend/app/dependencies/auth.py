@@ -36,7 +36,8 @@ def get_current_user(
             algorithms=[ALGORITHM],
         )
 
-        user_id = payload.get("sub")
+        user_id = payload.get("user_id")
+
 
         if user_id is None:
             raise credentials_exception

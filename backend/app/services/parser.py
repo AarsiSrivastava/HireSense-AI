@@ -42,13 +42,40 @@ def extract_text(pdf_path):
 # -----------------------------------
 
 def extract_name(text):
+
+    lines = [line.strip() for line in text.split("\n") if line.strip()]
+
+    email = extract_email(text)
+
+    # Try to find the line just above the email
+    if email:
+        for i, line in enumerate(lines):
+            if email in line:
+                if i > 0:
+                    candidate = lines[i - 1]
+
+                    # Ignore college names
+                    ignore_words = [
+                        "university",
+                        "college",
+                        "institute",
+                        "technology",
+                        "department"
+                    ]
+
+                    if not any(word in candidate.lower() for word in ignore_words):
+                        return candidate
+
+    # Fallback to spaCy
     doc = nlp(text)
 
     for ent in doc.ents:
         if ent.label_ == "PERSON":
-            return ent.text
+            if len(ent.text.split()) <= 4:
+                return ent.text
 
     return None
+
 
 
 # -----------------------------------

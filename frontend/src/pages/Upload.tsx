@@ -56,11 +56,19 @@ function Upload() {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append("file", selectedFile);
+    formData.append("resume", selectedFile);
     formData.append("job_description", jobDescription);
 
     try {
-      const response = await api.post("/upload", formData);
+      
+      const token = localStorage.getItem("token");
+
+const response = await api.post("/analyze", formData, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+
       setResumeData(response.data);
     } 
     catch (error: unknown) {

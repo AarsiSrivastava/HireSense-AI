@@ -4,12 +4,14 @@ from app.models.user import User
 from fastapi import Depends
 from fastapi import APIRouter, UploadFile, File, Form
 from app.services.parser import parse_resume
+from app.services.ai_feedback import generate_feedback
 import shutil
 import os
 
 router = APIRouter()
 
 UPLOAD_DIR = "app/uploads"
+
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
@@ -20,17 +22,29 @@ async def analyze_resume(
     current_user: User = Depends(get_current_user),
 ):
     # Save uploaded file
-    file_path = os.path.join(UPLOAD_DIR, file.filename)
+    file_path = os.path.join(UPLOAD_DIR, resume.filename)
 
     with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+       shutil.copyfileobj(resume.file, buffer)
+
 
     # Parse Resume
     result = parse_resume(file_path)
+    resume_text = ""
+
+    resume_text += result.get("name", "") + "\n"
+    resume_text += result.get("email", "") + "\n"
+    resume_text += result.get("phone", "") + "\n"
+
+    resume_text += "\n".join(result.get("skills", []))
+    resume_text += "\n".join(result.get("education", []))
+    resume_text += "\n".join(result.get("experience", []))
+    resume_text += "\n".join(result.get("projects", []))  
+    resume_text += "\n".join(result.get("certifications", []))
 
     # Job Description
     job_description = (job_description or "").lower()
-
+    feedback = generate_feedback(resume_text, job_description)
     resume_skills = [
         skill.lower()
         for skill in result.get("skills", [])
@@ -286,5 +300,6 @@ async def analyze_resume(
     result["section_analysis"] = section_analysis
     result["interview_chance"] = interview_chance
     result["recommendation"] = recommendation
+    result["feedback"] = feedback
 
     return result
