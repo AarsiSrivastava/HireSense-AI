@@ -102,7 +102,7 @@ const response = await api.post("/analyze", formData, {
     <>
       <Navbar />
 
-      <main className="min-h-screen flex flex-col items-center gap-8 px-4 py-10">
+      <main className="min-h-screen flex flex-col items-center gap-8 px-4 py-10 bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100">
 
         <UploadBox onFileSelect={setSelectedFile} />
 
@@ -120,15 +120,17 @@ const response = await api.post("/analyze", formData, {
 
           <div className="w-full max-w-6xl space-y-6">
 
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-blue-700">
-                HireSense AI Report
-              </h1>
+            <div className="text-center py-4">
 
-              <p className="text-gray-500 mt-2">
-                AI Powered Resume Analysis Dashboard
-              </p>
-            </div>
+  <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+    HireSense-AI
+  </h1>
+
+  <p className="mt-4 text-lg text-gray-600">
+    AI Powered Resume Intelligence Dashboard
+  </p>
+
+</div>
 
             <ResultCard title="Resume Information">
 

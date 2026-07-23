@@ -34,48 +34,78 @@ def extract_text(pdf_path):
 
     pdf.close()
 
+    # Clean invisible characters inserted by many PDF resume builders
+    text = (
+        text.replace("\u200b", "")
+            .replace("\xa0", " ")
+            .replace("\uf0b7", "•")
+    )
+
     return text
+
 
 
 # -----------------------------------
 # Extract Name
 # -----------------------------------
 
+
 def extract_name(text):
 
     lines = [line.strip() for line in text.split("\n") if line.strip()]
 
-    email = extract_email(text)
+    print("\n===== FIRST 15 LINES OF RESUME =====")
+    for i, line in enumerate(lines[:15]):
+        print(f"{i}: {repr(line)}")
+    print("====================================\n")
 
-    # Try to find the line just above the email
-    if email:
-        for i, line in enumerate(lines):
-            if email in line:
-                if i > 0:
-                    candidate = lines[i - 1]
+    ignore_words = [
+        "india",
+        "linkedin",
+        "github",
+        "leetcode",
+        "portfolio",
+        "education",
+        "email",
+        "phone",
+        "@",
+        "http",
+        "www",
+    ]
 
-                    # Ignore college names
-                    ignore_words = [
-                        "university",
-                        "college",
-                        "institute",
-                        "technology",
-                        "department"
-                    ]
+    for line in lines[:8]:
 
-                    if not any(word in candidate.lower() for word in ignore_words):
-                        return candidate
+        lower = line.lower()
+
+        # Ignore unwanted lines
+        if any(word in lower for word in ignore_words):
+            continue
+
+        # Ignore phone numbers
+        if extract_phone(line):
+            continue
+
+        # Remove punctuation except spaces
+        cleaned = re.sub(r"[^A-Za-z ]", "", line).strip()
+
+        words = cleaned.split()
+
+        # Candidate should be 2-4 alphabetic words
+        if (
+            2 <= len(words) <= 4
+            and all(word.isalpha() for word in words)
+        ):
+            return " ".join(word.capitalize() for word in words)
 
     # Fallback to spaCy
     doc = nlp(text)
 
     for ent in doc.ents:
         if ent.label_ == "PERSON":
-            if len(ent.text.split()) <= 4:
+            if 2 <= len(ent.text.split()) <= 4:
                 return ent.text
 
-    return None
-
+    return "Unknown"
 
 
 # -----------------------------------
