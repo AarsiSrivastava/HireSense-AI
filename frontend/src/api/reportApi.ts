@@ -1,0 +1,33 @@
+import axios from "axios";
+
+const API_URL = "http://127.0.0.1:8000";
+
+export const downloadPDF = async (reportData: any) => {
+  const response = await axios.post(
+    `${API_URL}/report/pdf`,
+    reportData,
+    {
+      responseType: "blob",
+    }
+  );
+
+  const blob = new Blob([response.data], {
+    type: "application/pdf",
+  });
+
+  const url = window.URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+
+  link.download = "HireSense_AI_Report.pdf";
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  link.remove();
+
+  window.URL.revokeObjectURL(url);
+};

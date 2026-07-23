@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.routes import report
 from app.routes.resume import router as resume_router
 from app.routes import auth
 
@@ -26,7 +26,7 @@ app.add_middleware(
 # Register Routes
 app.include_router(resume_router)
 app.include_router(auth.router)
-
+app.include_router(report.router)
 
 @app.get("/")
 def home():

@@ -19,6 +19,7 @@ import ATSProgressBar from "../components/result/ATSProgressBar";
 import SummaryCard from "../components/result/SummaryCard";
 import RecruiterVerdict from "../components/result/RecruiterVerdict";
 import PrioritySuggestion from "../components/result/PrioritySuggestion";
+import { downloadPDF } from "../api/reportApi";
 
 interface ResumeData {
   analysis_type: string;
@@ -360,11 +361,24 @@ const response = await api.post("/analyze", formData, {
                         <div className="flex justify-center gap-4 pt-6">
 
               <button
-                onClick={() => window.print()}
-                className="px-8 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition"
-              >
-                Download Report
-              </button>
+  onClick={() => {
+    if (!resumeData) return;
+
+    downloadPDF({
+      name: resumeData.name,
+      ats_score: resumeData.ats_score,
+      verdict: resumeData.recommendation,
+      summary: `Resume Analysis for ${resumeData.name}`,
+      strengths: resumeData.strengths,
+      weaknesses: resumeData.weaknesses,
+      missing_skills: resumeData.missing_skills,
+      suggestions: resumeData.suggestions,
+    });
+  }}
+  className="px-8 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+>
+  📄 Download PDF Report
+</button>
 
               <button
                 onClick={() => setResumeData(null)}
