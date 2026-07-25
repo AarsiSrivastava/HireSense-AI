@@ -12,29 +12,34 @@ export default function Login({ onLoginSuccess }: LoginProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  
   const handleLogin = async () => {
-    try {
-      const response = await axios.post(
-    "http://127.0.0.1:8000/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+  console.log("Login button clicked");
+  console.log(email, password);
 
-      localStorage.setItem("token", response.data.access_token);
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8000/auth/login",
+      {
+        email,
+        password,
+      }
+    );
 
-alert("Login successful!");
+    console.log("Response:", response.data);
 
-onLoginSuccess();
+    localStorage.setItem("token", response.data.access_token);
 
-navigate("/upload");
+    alert("Login successful!");
 
-    } catch (error) {
-      console.error(error);
-      alert("Invalid email or password.");
-    }
-  };
+    onLoginSuccess();
+
+    navigate("/upload");
+  } catch (error) {
+    console.error("Login Error:", error);
+    alert("Invalid email or password.");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center">

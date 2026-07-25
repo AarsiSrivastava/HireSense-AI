@@ -1,6 +1,8 @@
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
@@ -23,12 +25,20 @@ function Navbar() {
           </span>
 
           <button
+  onClick={() => navigate("/history")}
+  className="rounded-xl bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600"
+>
+  History
+</button>
+
+          <button
             onClick={handleLogout}
             className="flex items-center gap-2 rounded-xl bg-red-500 px-4 py-2 text-white transition hover:bg-red-600"
           >
             <ArrowRightOnRectangleIcon className="h-5 w-5" />
             Logout
           </button>
+          
         </div>
       </div>
     </nav>

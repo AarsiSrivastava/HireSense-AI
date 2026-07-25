@@ -11,14 +11,61 @@ nlp = spacy.load("en_core_web_sm")
 # -----------------------------------
 
 SKILLS_DB = [
-    "python", "java", "c", "c++", "javascript", "typescript",
-    "html", "css", "react", "node.js", "express", "fastapi",
-    "django", "flask", "mongodb", "mysql", "postgresql", "sql",
-    "git", "github", "docker", "aws", "azure", "tensorflow",
-    "pytorch", "machine learning", "deep learning", "nlp",
-    "data science", "pandas", "numpy", "opencv",
-    "tailwind", "bootstrap", "figma", "rest api"
+
+"python",
+"java",
+"c",
+"c++",
+"javascript",
+"typescript",
+"html",
+"css",
+"react",
+"node.js",
+"express",
+"mongodb",
+"mysql",
+"postgresql",
+"sql",
+"git",
+"github",
+"docker",
+"kubernetes",
+"aws",
+"azure",
+"gcp",
+"linux",
+"fastapi",
+"django",
+"flask",
+"next.js",
+"vue",
+"angular",
+"redux",
+"vite",
+"spring",
+"spring boot",
+"firebase",
+"supabase",
+"graphql",
+"redis",
+"opencv",
+"numpy",
+"pandas",
+"matplotlib",
+"scikit-learn",
+"tensorflow",
+"pytorch",
+"streamlit",
+"langchain",
+"huggingface",
+"openai",
+"ollama",
+"rag",
+"pinecone",
+"chromadb"
 ]
+
 
 # -----------------------------------
 # Extract text from PDF
@@ -127,7 +174,7 @@ def extract_email(text):
 
 def extract_phone(text):
     phones = re.findall(
-        r"(?:\+91[-\s]?)?[6-9]\d{9}",
+        r"(\+?\d[\d\-\(\)\s]{8,}\d)",
         text
     )
 
@@ -144,8 +191,12 @@ def extract_skills(text):
     found_skills = []
 
     for skill in SKILLS_DB:
-        if skill.lower() in text:
+        pattern = r"\b" + re.escape(skill.lower()) + r"\b"
+
+        if re.search(pattern, text):
             found_skills.append(skill)
+
+            
 
     return sorted(list(set(found_skills)))
 

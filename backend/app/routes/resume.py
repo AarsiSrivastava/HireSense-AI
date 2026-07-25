@@ -1,4 +1,8 @@
+from sqlalchemy.orm import Session
+from app.database.database import get_db
+from app.models.analysis import Analysis
 from typing import Optional
+
 from app.dependencies.auth import get_current_user
 from app.models.user import User
 from fastapi import Depends
@@ -20,7 +24,9 @@ async def analyze_resume(
     resume: UploadFile = File(...),
     job_description: str = Form(...),
     current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
+    
     # Save uploaded file
     file_path = os.path.join(UPLOAD_DIR, resume.filename)
 
@@ -32,15 +38,15 @@ async def analyze_resume(
     result = parse_resume(file_path)
     resume_text = ""
 
-    resume_text += result.get("name", "") + "\n"
-    resume_text += result.get("email", "") + "\n"
-    resume_text += result.get("phone", "") + "\n"
+    resume_text += (result.get("name") or "") + "\n"
+    resume_text += (result.get("email") or "") + "\n"
+    resume_text += (result.get("phone") or "") + "\n"
 
-    resume_text += "\n".join(result.get("skills", []))
-    resume_text += "\n".join(result.get("education", []))
-    resume_text += "\n".join(result.get("experience", []))
-    resume_text += "\n".join(result.get("projects", []))  
-    resume_text += "\n".join(result.get("certifications", []))
+    resume_text += "\n".join(result.get("skills") or [])
+    resume_text += "\n".join(result.get("education") or [])
+    resume_text += "\n".join(result.get("experience") or [])
+    resume_text += "\n".join(result.get("projects") or [])
+    resume_text += "\n".join(result.get("certifications") or [])
 
     # Job Description
     job_description = (job_description or "").lower()
@@ -301,5 +307,32 @@ async def analyze_resume(
     result["interview_chance"] = interview_chance
     result["recommendation"] = recommendation
     result["feedback"] = feedback
+    
+    # Save analysis result to the database
+    analysis = Analysis(
+        user_id=current_user.id,
+        resume_name=resume.filename,
+        ats_score=ats_score,
+        recruiter_verdict=recommendation,
+
+    )
+    db.add(analysis)
+    db.commit()
+    db.refresh(analysis)
 
     return result
+
+
+@router.get("/history")
+def get_analysis_history(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    analyses = (
+        db.query(Analysis)
+        .filter(Analysis.user_id == current_user.id)
+        .order_by(Analysis.created_at.desc())
+        .all()
+    )
+
+    return analyses

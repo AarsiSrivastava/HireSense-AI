@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import report
 from app.routes.resume import router as resume_router
 from app.routes import auth
+from app.routes.history import router as history_router
 
 app = FastAPI(
     title="HireSense AI API",
@@ -28,6 +29,7 @@ app.include_router(resume_router)
 app.include_router(auth.router)
 app.include_router(report.router)
 
+app.include_router(history_router)
 @app.get("/")
 def home():
     return {
