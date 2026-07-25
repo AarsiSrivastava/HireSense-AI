@@ -16,7 +16,7 @@ export default function Register({
   const handleRegister = async () => {
     try {
       await axios.post(
-  "http://127.0.0.1:8000/auth/signup",
+  "https://hiresense-ai-yjuo.onrender.com/auth/signup",
   {
       full_name: name,
       email,

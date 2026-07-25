@@ -1,7 +1,7 @@
 
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://hiresense-ai-yjuo.onrender.com";
 
 export const getHistory = async () => {
   const token = localStorage.getItem("token");

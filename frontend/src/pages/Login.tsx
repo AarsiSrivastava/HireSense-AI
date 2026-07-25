@@ -19,7 +19,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/auth/login",
+      "https://hiresense-ai-yjuo.onrender.com/auth/login",
       {
         email,
         password,
