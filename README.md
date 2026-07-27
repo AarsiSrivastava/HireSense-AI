@@ -31,10 +31,6 @@ https://hire-sense-ai-pi.vercel.app
 Backend:
 https://hiresense-ai-yjuo.onrender.com
 
-## Screenshots
-
-(Add screenshots here)
-
 ## Installation
 
 Frontend
