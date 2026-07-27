@@ -44,24 +44,27 @@ function UploadBox({ onFileSelect }: UploadBoxProps) {
         Drag & Drop your resume here
       </p>
 
+
       <button
-        onClick={() => fileInputRef.current?.click()}
-        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-      >
-        Choose File
-      </button>
+  type="button"
+  onClick={() => fileInputRef.current?.click()}
+  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+>
+  Choose File
+</button>
+
 
       <input
-        type="file"
-        accept=".pdf,.doc,.docx"
-        ref={fileInputRef}
-        className="hidden"
-        onChange={(e) => {
-          if (e.target.files && e.target.files.length > 0) {
-            handleFile(e.target.files[0]);
-          }
-        }}
-      />
+  type="file"
+  accept=".pdf,.doc,.docx"
+  ref={fileInputRef}
+  className="hidden"
+  onChange={(e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFile(e.target.files[0]);
+    }
+  }}
+/>
 
       {selectedFile && (
         <p className="mt-4 text-green-600 font-medium">
