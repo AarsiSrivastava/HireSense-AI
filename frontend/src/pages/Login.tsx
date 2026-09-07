@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 
 interface LoginProps {
@@ -71,6 +72,17 @@ export default function Login({ onLoginSuccess }: LoginProps) {
         >
           Login
         </button>
+        <div className="text-center mt-4">
+  <p className="text-sm text-gray-600">
+    Don't have an account?{" "}
+    <Link
+      to="/register"
+      className="text-blue-600 hover:underline font-medium"
+    >
+      Register
+    </Link>
+  </p>
+</div>
 
       </div>
 
