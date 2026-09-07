@@ -26,7 +26,7 @@ AI-powered Resume ATS Analyzer built using React, TypeScript, FastAPI, Python, P
 ## Live Demo
 
 Frontend:
-https://hire-sense-ai-pi.vercel.app
+https://hiresense-ai-frontend-9192.onrender.com
 
 Backend:
 https://hiresense-ai-yjuo.onrender.com
@@ -42,3 +42,4 @@ Backend
 
 pip install -r requirements.txt
 python -m uvicorn app. main: app --reload
+
